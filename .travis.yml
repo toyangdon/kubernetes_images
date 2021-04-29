@@ -1,0 +1,31 @@
+language: go
+arch:
+  - arm64
+os:
+  - linux
+services:
+  - docker
+before_install:
+  - docker login -u "$DOCKER_USERNAME" -p $DOCKER_PASSWORD
+  - export VERSION=${VERSION-v1.21.0}
+ #- git clone https://github.com/kubernetes/kubernetes.git --depth=1
+ #- wget https://dl.k8s.io/v1.21.0/kubernetes-server-linux-arm64.tar.gz
+  - wget https://dl.k8s.io/${VERSION}/kubernetes-server-linux-arm64.tar.gz
+script: 
+  - export pwd=$PWD && echo $PWD
+  - tar -xzvf kubernetes-server-linux-arm64.tar.gz
+  - docker load -i kubernetes/server/bin/kube-apiserver.tar
+  - docker load -i kubernetes/server/bin/kube-controller-manager.tar
+  - docker load -i kubernetes/server/bin/kube-scheduler.tar
+  - docker load -i kubernetes/server/bin/kube-proxy.tar
+  - docker tag k8s.gcr.io/kube-apiserver-arm64:${VERSION} toyangdon/kube-apiserver-arm64:${VERSION}
+  - docker tag k8s.gcr.io/kube-controller-manager-arm64:${VERSION} toyangdon/kube-controller-manager-arm64:${VERSION}
+  - docker tag k8s.gcr.io/kube-scheduler-arm64:${VERSION} toyangdon/kube-scheduler-arm64:${VERSION}
+  - docker tag k8s.gcr.io/kube-proxy-arm64:${VERSION} toyangdon/kube-proxy-arm64:${VERSION}
+  - docker push toyangdon/kube-apiserver-arm64:${VERSION}
+  - docker push toyangdon/kube-controller-manager-arm64:${VERSION}
+  - docker push toyangdon/kube-scheduler-arm64:${VERSION}
+  - docker push toyangdon/kube-proxy-arm64:${VERSION}
+  - cd $pwd/docker-elk-arm64/kibana
+  - docker build -t toyangdon/kibana-arm:7.10.2 .
+  - docker push toyangdon/kibana-arm:7.10.2
