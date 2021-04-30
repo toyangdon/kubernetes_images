@@ -26,6 +26,5 @@ script:
   - docker push toyangdon/kube-controller-manager-arm64:${VERSION}
   - docker push toyangdon/kube-scheduler-arm64:${VERSION}
   - docker push toyangdon/kube-proxy-arm64:${VERSION}
-  - cd $pwd/docker-elk-arm64/kibana
-  - docker build -t toyangdon/kibana-arm:7.10.2 .
-  - docker push toyangdon/kibana-arm:7.10.2
+  - docker build -t toyangdon/kubernetes-binary:${VERSION} .
+  - docker push toyangdon/kubernetes-binary:${VERSION}
