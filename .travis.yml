@@ -26,5 +26,10 @@ script:
   - docker push toyangdon/kube-controller-manager-arm64:${VERSION}
   - docker push toyangdon/kube-scheduler-arm64:${VERSION}
   - docker push toyangdon/kube-proxy-arm64:${VERSION}
+  - docker pull k8s.gcr.io/pause:3.4.1
+  - docker tag k8s.gcr.io/pause:3.4.1 toyangdon/pause:3.4.1
+  - docker pull quay.io/coreos/etcd:v3.4.13-arm64
+  - docker tag k8s.gcr.io/etcd:3.4.13-0 toyangdon/etcd:3.4.13-0
+k8s.gcr.io/coredns/coredns:v1.8.0
   - docker build -t toyangdon/kubernetes-binary:${VERSION} .
   - docker push toyangdon/kubernetes-binary:${VERSION}
